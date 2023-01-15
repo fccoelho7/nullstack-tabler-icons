@@ -2,6 +2,11 @@
   "name": "nullstack-tabler-icons",
   "version": "1.0.2",
   "license": "MIT",
+  "keywords": [
+    "nullstack",
+    "icons",
+    "feather"
+  ],
   "repository": {
     "type": "git",
     "url": "https://github.com/fccoelho7/nullstack-tabler-icons"
