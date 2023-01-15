@@ -3,6 +3,7 @@
 const fs = require("fs-extra");
 const path = require("path");
 const { pascalCase } = require("pascal-case");
+const babel = require("@babel/core");
 
 const PATH = path.resolve("node_modules/@tabler/icons/icons");
 
@@ -63,13 +64,25 @@ fs.readdir(PATH, (err, items) => {
       let nameCamel =
         "Icon" + pascalCase(name.replace(".svg", "")).replace(/_(\d)/g, "$1");
 
-      // create component
-      const component = componentTemplate(nameCamel, content);
+      // create and transform component
+      let component = componentTemplate(nameCamel, content);
+      const compiled = babel.transform(component, {
+        plugins: [
+          [
+            "@babel/plugin-transform-react-jsx",
+            {
+              runtime: "classic",
+              pragma: "Nullstack.element",
+              pragmaFrag: "Nullstack.fragment",
+            },
+          ],
+        ],
+      }).code;
 
       // write icon component
       let filePath = path.resolve(`icons/${nameCamel}.jsx`);
       fs.ensureDirSync(path.dirname(filePath));
-      fs.writeFileSync(filePath, component, "utf-8");
+      fs.writeFileSync(filePath, compiled, "utf-8");
 
       index.push(`export { default as ${nameCamel} } from './${nameCamel}';`);
       typings.push(`export const ${nameCamel}: TablerIconComponent;`);
