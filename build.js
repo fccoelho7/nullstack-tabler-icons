@@ -9,6 +9,8 @@ const PATH = path.resolve("node_modules/@tabler/icons/icons");
 
 const componentTemplate = (name, svg) =>
   `
+import Nullstack from 'nullstack';
+
 export default function ${name}({ size = 24, color = "currentColor", stroke = 2 }) {
   const allProps = {
     width: size,
@@ -74,6 +76,7 @@ fs.readdir(PATH, (err, items) => {
               runtime: "classic",
               pragma: "Nullstack.element",
               pragmaFrag: "Nullstack.fragment",
+              useSpread: true,
             },
           ],
         ],
