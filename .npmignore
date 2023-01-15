@@ -1,0 +1,7 @@
+.vscode
+yarn.lock
+jsx
+build.js
+*.tgz
+.github
+demo

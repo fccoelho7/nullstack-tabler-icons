@@ -1,0 +1,38 @@
+{
+  "name": "nullstack-tabler-icons",
+  "version": "1.0.0",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/fccoelho7/nullstack-tabler-icons"
+  },
+  "scripts": {
+    "clean": "rm -rf ./icons ./dist",
+    "compile": "node build.js",
+    "build": "npm run clean && npm run compile",
+    "dist": "bili --format umd,umd-min,es,cjs --module-name NullstackTablerIcons --input.nullstack-tabler-icons index.js && cp index.d.ts dist/",
+    "release": "npm run build && npm run dist && npm publish"
+  },
+  "author": {
+    "email": "fccoelho7@gmail.com",
+    "name": "Fabio Coelho"
+  },
+  "main": "dist/nullstack-tabler-icons.js",
+  "module": "dist/nullstack-tabler-icons.es.js",
+  "cdn": "dist/nullstack-tabler-icons.umd.min.js",
+  "unpkg": "dist/nullstack-tabler-icons.umd.min.js",
+  "jsdelivr": "dist/nullstack-tabler-icons.umd.min.js",
+  "types": "dist/index.d.ts",
+  "files": [
+    "dist",
+    "icons"
+  ],
+  "sideEffects": false,
+  "devDependencies": {
+    "@tabler/icons": "^1.119.0",
+    "bili": "^5.0.5",
+    "fs-extra": "^11.1.0",
+    "nullstack": "^0.17.2",
+    "pascal-case": "^3.1.2"
+  }
+}
