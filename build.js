@@ -2,10 +2,17 @@
 
 const fs = require("fs-extra");
 const path = require("path");
+const converter = require("number-to-words");
 const { pascalCase } = require("pascal-case");
 const babel = require("@babel/core");
 
 const PATH = path.resolve("node_modules/@tabler/icons/icons");
+
+function formatIconName(name) {
+  name = name.replace(/\d+/g, (match) => converter.toWords(match)); // convert numbers to words
+  name = pascalCase(name.replace(".svg", ""));
+  return name + "Icon";
+}
 
 const componentTemplate = (name, svg) =>
   `
@@ -37,16 +44,6 @@ export type TablerIconProps = {
 export type TablerIconComponent = NullstackFunctionalComponent<TablerIconProps>;
 `.trim();
 
-const aliases = {
-  "2fa.svg": "two-factor-auth.svg",
-  "3d-cube-sphere.svg": "threed-cube-sphere.svg",
-  "3d-cube-sphere-off.svg": "threed-cube-sphere-off.svg",
-  "3d-rotate.svg": "threed-rotate.svg",
-  "123.svg": "onetwotree.svg",
-  "360-view.svg": "deg360-view.svg",
-  "24-hours.svg": "twenty-four-hours.svg",
-};
-
 fs.readdir(PATH, (err, items) => {
   let index = [];
   let typings = [];
@@ -62,12 +59,10 @@ fs.readdir(PATH, (err, items) => {
         .replace(/\n/gm, " ");
 
       // make name
-      if (name in aliases) name = aliases[name];
-      let nameCamel =
-        "Icon" + pascalCase(name.replace(".svg", "")).replace(/_(\d)/g, "$1");
+      const nameCamel = formatIconName(name);
 
       // create and transform component
-      let component = componentTemplate(nameCamel, content);
+      const component = componentTemplate(nameCamel, content);
       const compiled = babel.transform(component, {
         plugins: [
           [
@@ -83,7 +78,7 @@ fs.readdir(PATH, (err, items) => {
       }).code;
 
       // write icon component
-      let filePath = path.resolve(`icons/${nameCamel}.jsx`);
+      const filePath = path.resolve(`icons/${nameCamel}.jsx`);
       fs.ensureDirSync(path.dirname(filePath));
       fs.writeFileSync(filePath, compiled, "utf-8");
 
